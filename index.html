@@ -16,7 +16,8 @@
       crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stats.js/r16/Stats.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.6/dat.gui.js"></script>
-    <script src="https://unpkg.com/three@0.85.0/examples/js/createBuilding/OrbitcreateBuilding.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.101.1/examples/js/controls/OrbitControls.js"></script>
+    
     <script>
       var scene;
       var camera;
@@ -26,16 +27,17 @@
       var plane;
       var stats;
       var controls;
-
+      var randomColor = Math.floor(Math.random()*16777215).toString(16);
+      
       function createCamera() {
         camera = new THREE.PerspectiveCamera(
           75,
           window.innerWidth / window.innerHeight,
           1,
-          100
+          1000
         );
-        camera.position.set(70, 30, 50);
-        // camera.rotation
+        camera.position.set(110, -50, 50);
+        camera.rotation.x = Math.PI * 0.4;
       }
 
       function createDataGui() {
@@ -45,12 +47,12 @@
 
       var createBuilding = new (function () {
         this.addBuilding = function () {
-          let random10 = Math.floor(Math.random() * 10+3);
-          let geometry = new THREE.CubeGeometry(random10, random10, Math.floor(Math.random() * 30));
-          let material = new THREE.MeshNormalMaterial({ wireframe: false });
+          let random10 = Math.floor(Math.random() * 5 + 10);
+          let geometry = new THREE.CubeGeometry(random10, random10, Math.floor(Math.random() * 50 + 20));
+          let material = new THREE.MeshNormalMaterial({ color: 0xfff000 });
           cube = new THREE.Mesh(geometry, material);
           cube.name = "cube";
-          cube.position.set(Math.floor(Math.random() * 140), Math.floor(Math.random() * 60), -5);
+          cube.position.set(Math.floor(Math.random() * 230), Math.floor(Math.random() * 100), 5);
           scene.add(cube);
         }
       });
@@ -58,15 +60,16 @@
       function createRenderer() {
         renderer = new THREE.WebGLRenderer();
         renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(new THREE.Color(0xffffff));
         document.body.appendChild(renderer.domElement);
         controls = new THREE.OrbitControls(camera, renderer.domElement);
       }
 
       function createPlane() {
-        let geometry = new THREE.PlaneGeometry( 150, 70, 10 );
-        let material = new THREE.MeshBasicMaterial( {color: 0xc9b9f0, side: THREE.DoubleSide} );
+        let geometry = new THREE.PlaneGeometry( 250, 200, 10 );
+        let material = new THREE.MeshLambertMaterial( {color: 0xffffff, side: THREE.DoubleSide} );
         plane = new THREE.Mesh( geometry, material );
-        plane.position.set(70, 30, -10)
+        plane.position.set(110, 80, -10)
         scene.add(plane);
       }
 
@@ -92,28 +95,29 @@
       function init() {
         //create scene
         scene = new THREE.Scene();
-        scene.fog = new THREE.Fog(0xffffff, 10, 100);
+        scene.fog = new THREE.Fog(0xffffff, 5, 200);
+        
         //create camera
         createCamera();
+        
         createPlane();
-        //create cube
-        createCube();
+
         //create rederer
         createRenderer();
-        //element render
+        
         createStats();
         createDataGui();
       }
-
+      
       function animate() {
         stats.update();
         requestAnimationFrame(animate);
+        
         controls.update();
         renderer.render(scene, camera);
       }
-        
-      init();
       
+      init();
       requestAnimationFrame(animate);
     </script>
 
