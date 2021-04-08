@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ejemplo ThreeJs</title>
+  </head>
+  <body>
+
+    <div id="myStats"></div>
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/three.js/94/three.min.js"
+      integrity="sha512-ZGgXd6TB5qjtvTU6Q5o/LJM4pwLNy8U8XXJh+vJZDXp2wC8ASrl4WOeivaq2fpYc3TnTCLzyDvVjY8YhvNYaXg=="
+      crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stats.js/r16/Stats.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.6/dat.gui.js"></script>
+    <script src="https://unpkg.com/three@0.85.0/examples/js/createBuilding/OrbitcreateBuilding.js"></script>
+    <script>
+      var scene;
+      var camera;
+      var renderer;
+      var material;
+      var cube;
+      var plane;
+      var stats;
+      var controls;
+
+      function createCamera() {
+        camera = new THREE.PerspectiveCamera(
+          75,
+          window.innerWidth / window.innerHeight,
+          1,
+          100
+        );
+        camera.position.set(70, 30, 50);
+        // camera.rotation
+      }
+
+      function createDataGui() {
+        var gui = new dat.GUI();
+        gui.add(createBuilding, "addBuilding");
+      }
+
+      var createBuilding = new (function () {
+        this.addBuilding = function () {
+          let random10 = Math.floor(Math.random() * 10+3);
+          let geometry = new THREE.CubeGeometry(random10, random10, Math.floor(Math.random() * 30));
+          let material = new THREE.MeshNormalMaterial({ wireframe: false });
+          cube = new THREE.Mesh(geometry, material);
+          cube.name = "cube";
+          cube.position.set(Math.floor(Math.random() * 140), Math.floor(Math.random() * 60), -5);
+          scene.add(cube);
+        }
+      });
+
+      function createRenderer() {
+        renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+        controls = new THREE.OrbitControls(camera, renderer.domElement);
+      }
+
+      function createPlane() {
+        let geometry = new THREE.PlaneGeometry( 150, 70, 10 );
+        let material = new THREE.MeshBasicMaterial( {color: 0xc9b9f0, side: THREE.DoubleSide} );
+        plane = new THREE.Mesh( geometry, material );
+        plane.position.set(70, 30, -10)
+        scene.add(plane);
+      }
+
+      function createStats() {
+        stats = new Stats();
+        stats.setMode(2);
+        stats.domElement.style.position = 'absolute';
+        stats.domElement.style.left = '80px';
+        stats.domElement.style.top = '10px';
+        document.getElementById('myStats').appendChild(stats.domElement);
+        return stats;
+      }
+
+      function createCube() {
+        let geometry = new THREE.CubeGeometry(4, 4, 4);
+        let material = new THREE.MeshNormalMaterial({ wireframe: false });
+        cube = new THREE.Mesh(geometry, material);
+        cube.name = "cube";
+        cube.position.set(140, 0, 0);
+        scene.add(cube);
+      }
+
+      function init() {
+        //create scene
+        scene = new THREE.Scene();
+        scene.fog = new THREE.Fog(0xffffff, 10, 100);
+        //create camera
+        createCamera();
+        createPlane();
+        //create cube
+        createCube();
+        //create rederer
+        createRenderer();
+        //element render
+        createStats();
+        createDataGui();
+      }
+
+      function animate() {
+        stats.update();
+        requestAnimationFrame(animate);
+        controls.update();
+        renderer.render(scene, camera);
+      }
+        
+      init();
+      
+      requestAnimationFrame(animate);
+    </script>
+
+  </body>
+</html>
