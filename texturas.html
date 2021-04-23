@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Texturas y objetos</title>
+  </head>
+  <body>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/96/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.85.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.rawgit.com/mrdoob/three.js/r69/examples/js/loaders/ColladaLoader.js"></script>
+
+    <script>
+      var scene;
+      var camera;
+      var renderer;
+      var controls;
+      var box;
+      var plane;
+      var tetera;
+
+      function createCamera() {
+        camera = new THREE.PerspectiveCamera(
+          75,
+          window.innerWidth / window.innerHeight,
+          1,
+          100
+        );
+        camera.position.set(0, -10, 8);
+        camera.rotation.x = Math.PI * 0.4;
+      }
+
+      function createRenderer() {
+        renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+        controls = new THREE.OrbitControls(camera, renderer.domElement);
+      }
+
+      // function createCube() {
+      //   let geometry = new THREE.CubeGeometry(5, 5, 5);
+      //   let texture = new THREE.TextureLoader().load("../images/pared.png");
+      //   let material = new THREE.MeshBasicMaterial({ map: texture });
+      //   cube = new THREE.Mesh(geometry, material);
+      //   cube.position.set(0, 0, 0);
+      //   cube.name = "cube";
+      //   scene.add(cube);
+      // }
+
+      function createPlane() {
+        let geometry = new THREE.PlaneBufferGeometry(50, 30, 10);
+        let texture = new THREE.TextureLoader().load("../images/pared.png");
+        let material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
+        plane = new THREE.Mesh(geometry, material);
+        plane.name = "plane";
+        scene.add(plane);
+      }
+
+      function createMontaje() {
+        var loader = new THREE.ColladaLoader();
+        loader.load("../assets/tetera.dae", (miObjeto) => {
+            tetera = miObjeto.scene;
+            tetera.scale.set(2, 2, 2);
+            tetera.name = "tetera";
+            scene.add(tetera);
+            controls.update();
+        });
+      }
+
+      function createLight() {
+        const light = new THREE.AmbientLight( 0xffffff, 1.5 );
+        light.position.set( 20, 20, 100 );
+        scene.add( light );
+      }
+
+      function animate() {
+        controls.update();
+        requestAnimationFrame(animate);
+        renderer.render(scene, camera);
+      }
+
+      function init() {
+        scene = new THREE.Scene();
+        createCamera();
+        createPlane();
+        createLight();
+        createMontaje();
+        createRenderer();
+      }
+
+      init();
+      requestAnimationFrame(animate);
+    </script>
+    
+  </body>
+</html>
