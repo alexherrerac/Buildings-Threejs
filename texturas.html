@@ -41,7 +41,7 @@
 
       // function createCube() {
       //   let geometry = new THREE.CubeGeometry(5, 5, 5);
-      //   let texture = new THREE.TextureLoader().load("../images/pared.png");
+      //   let texture = new THREE.TextureLoader().load("./images/pared.png");
       //   let material = new THREE.MeshBasicMaterial({ map: texture });
       //   cube = new THREE.Mesh(geometry, material);
       //   cube.position.set(0, 0, 0);
@@ -51,7 +51,7 @@
 
       function createPlane() {
         let geometry = new THREE.PlaneBufferGeometry(50, 30, 10);
-        let texture = new THREE.TextureLoader().load("../images/pared.png");
+        let texture = new THREE.TextureLoader().load("./images/pared.png");
         let material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
         plane = new THREE.Mesh(geometry, material);
         plane.name = "plane";
@@ -60,7 +60,7 @@
 
       function createMontaje() {
         var loader = new THREE.ColladaLoader();
-        loader.load("../assets/tetera.dae", (miObjeto) => {
+        loader.load("./assets/tetera.dae", (miObjeto) => {
             tetera = miObjeto.scene;
             tetera.scale.set(2, 2, 2);
             tetera.name = "tetera";
