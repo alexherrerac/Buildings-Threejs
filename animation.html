@@ -31,7 +31,7 @@
         const loader = new THREE.GLTFLoader();
         var mixers = [];
         var clock = new THREE.Clock();
-        loader.load('./assets/zombie.glb', function (gltf) {
+        loader.load('./assets/zombie.glb', (gltf) => {
             mixer = new THREE.AnimationMixer(gltf.scene);
             var action = mixer.clipAction(gltf.animations[0]);
             action.play();
